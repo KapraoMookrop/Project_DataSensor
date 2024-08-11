@@ -1,0 +1,12 @@
+[2024-08-10T05:50:48.563Z] ERROR: Unexpected end of JSON input
+[2024-08-10T05:52:33.703Z] ERROR: Missing data
+[2024-08-10T06:00:47.453Z] ERROR: Client has encountered a connection error and is not queryable
+[2024-08-10T06:04:15.245Z] ERROR: Database connection error: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:04:15.245Z] ERROR: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:04:31.373Z] ERROR: Database connection error: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:04:31.374Z] ERROR: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:04:37.814Z] ERROR: Database connection error: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:04:37.816Z] ERROR: Client has already been connected. You cannot reuse a client.
+[2024-08-10T06:06:04.639Z] ERROR: Client was closed and is not queryable
+[2024-08-10T06:16:26.989Z] ERROR: null value in column "id" of relation "sensor_data" violates not-null constraint
+[2024-08-10T06:16:37.051Z] ERROR: null value in column "id" of relation "sensor_data" violates not-null constraint
