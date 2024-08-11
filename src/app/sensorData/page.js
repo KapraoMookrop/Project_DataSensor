@@ -91,8 +91,7 @@ function SensorData() {
   };
 
   return (
-    <div className="container my-4">
-      <h1 className="my-4">Dashboard</h1>
+    <div className="container">
       <div className="row">
         <div className="col-md-12">
           <div className="card">
