@@ -13,12 +13,12 @@ const client = new Client({
 client.connect();
 
 // Function to log errors
-function logError(message) {
-    const logFilePath = path.join(process.cwd(), 'log.txt');
-    const currentDate = new Date().toISOString();
-    const logMessage = `[${currentDate}] ERROR: ${message}\n`;
-    fs.appendFileSync(logFilePath, logMessage);
-}
+// function logError(message) {
+//     const logFilePath = path.join(process.cwd(), 'log.txt');
+//     const currentDate = new Date().toISOString();
+//     const logMessage = `[${currentDate}] ERROR: ${message}\n`;
+//     fs.appendFileSync(logFilePath, logMessage);
+// }
 
 export async function POST(request) {
   try {
@@ -31,10 +31,10 @@ export async function POST(request) {
     }
 
     // บันทึกข้อมูลลงในฐานข้อมูล
-    const res = await client.query(
-      'INSERT INTO "TR000" (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
-      [ldr, vr, temp, distance]
-    );
+    // const res = await client.query(
+    //   'INSERT INTO "TR000" (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
+    //   [ldr, vr, temp, distance]
+    // );
 
     return new Response(JSON.stringify(res.rows[0]), {
       status: 201,
@@ -42,7 +42,7 @@ export async function POST(request) {
     });
   } catch (error) {
     // บันทึกข้อผิดพลาดลงใน log.txt
-    logError(error.message);
+    // logError(error.message);
     
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
