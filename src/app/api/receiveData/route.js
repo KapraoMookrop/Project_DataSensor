@@ -31,10 +31,10 @@ export async function POST(request) {
     }
 
     // บันทึกข้อมูลลงในฐานข้อมูล
-    // const res = await client.query(
-    //   'INSERT INTO "TR000" (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
-    //   [ldr, vr, temp, distance]
-    // );
+    const res = await client.query(
+      'INSERT INTO "TR000" (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
+      [ldr, vr, temp, distance]
+    );
 
     return new Response(JSON.stringify(res.rows[0]), {
       status: 201,
