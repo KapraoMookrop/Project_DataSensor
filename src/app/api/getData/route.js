@@ -12,13 +12,14 @@ client.connect();
 
 export async function GET() {
   try {
-    const res = await client.query('SELECT * FROM sensor_data ORDER BY updated DESC LIMIT 1');
+    const res = await client.query('SELECT * FROM "TR000"');
     return new Response(JSON.stringify(res.rows), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error }), {
+
+    return new Response(JSON.stringify({ error }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

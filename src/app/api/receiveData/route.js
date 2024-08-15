@@ -1,8 +1,8 @@
-//src/app/api/receiveData/route.js
+// src/app/api/receiveData/route.js
 import { Client } from 'pg';
 import fs from 'fs';
 import path from 'path';
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ export async function POST(request) {
 
     // บันทึกข้อมูลลงในฐานข้อมูล
     const res = await client.query(
-      'INSERT INTO sensor_data (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
+      'INSERT INTO "TR000" (ldr, vr, temp, distance) VALUES ($1, $2, $3, $4) RETURNING *',
       [ldr, vr, temp, distance]
     );
 
@@ -50,4 +50,3 @@ export async function POST(request) {
     });
   }
 }
-

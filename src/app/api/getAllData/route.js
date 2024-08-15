@@ -11,26 +11,31 @@ client.connect();
 
 function convertToThailandTime(timestamp) {
   const date = new Date(timestamp);
-  return date.toLocaleString('th-TH', {
-    timeZone: 'Asia/Bangkok',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false  // ใช้รูปแบบ 24 ชั่วโมง
-  });
+  
+  // Convert the time to Thailand timezone (UTC+7)
+  const options = { 
+    timeZone: 'Asia/Bangkok', 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  };
+  
+  // แปลงวันที่และเวลาให้เป็นฟอร์แมต 'YYYY-MM-DD HH:MM:SS'
+  const formattedDate = date.toLocaleString('en-GB', options).replace(',', '');
+  return formattedDate;
 }
 
 export async function GET() {
   try {
-    const res = await client.query('SELECT * FROM sensor_data');
+    const res = await client.query('SELECT * FROM "TR000"');
     
     // แปลง timestamp ในแต่ละ row ก่อนส่งไป
     const dataWithConvertedTime = res.rows.map(row => ({
       ...row,
-      updated: convertToThailandTime(row.updated)
+      updated: convertToThailandTime(row.updated)  // แปลงเวลา updated เป็นเวลาไทย
     }));
 
     return new Response(JSON.stringify(dataWithConvertedTime), {

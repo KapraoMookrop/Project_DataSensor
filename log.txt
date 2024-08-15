@@ -10,3 +10,6 @@
 [2024-08-10T06:06:04.639Z] ERROR: Client was closed and is not queryable
 [2024-08-10T06:16:26.989Z] ERROR: null value in column "id" of relation "sensor_data" violates not-null constraint
 [2024-08-10T06:16:37.051Z] ERROR: null value in column "id" of relation "sensor_data" violates not-null constraint
+[2024-08-13T04:49:19.217Z] ERROR: Connection terminated unexpectedly
+[2024-08-13T04:53:55.532Z] ERROR: Connection terminated unexpectedly
+[2024-08-15T01:13:02.420Z] ERROR: relation "tr000" does not exist
