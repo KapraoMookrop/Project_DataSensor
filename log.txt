@@ -13,3 +13,5 @@
 [2024-08-13T04:49:19.217Z] ERROR: Connection terminated unexpectedly
 [2024-08-13T04:53:55.532Z] ERROR: Connection terminated unexpectedly
 [2024-08-15T01:13:02.420Z] ERROR: relation "tr000" does not exist
+2024-08-18T05:42:29.582Z - Missing data
+2024-08-18T05:42:37.154Z - column "status_led" of relation "TR000" does not exist

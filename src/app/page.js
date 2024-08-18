@@ -5,8 +5,8 @@ import Dashboard from './dashboard/page';
 export default function Page() {
   return (
     <div className="container">
-        <SensorData />
         <Dashboard />
+        <SensorData />
     </div>
   );
 }
