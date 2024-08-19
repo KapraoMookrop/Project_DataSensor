@@ -14,7 +14,7 @@ export async function POST(request) {
   try {
     // รับข้อมูลจาก request body
     const body = await request.json();
-    const { red, green, blue } = body;
+    const { red, green, blue, mode } = body;
 
     // ตรวจสอบข้อมูลที่ได้รับ
     if (
@@ -24,8 +24,8 @@ export async function POST(request) {
     ) {
       // อัพเดทข้อมูลในฐานข้อมูล
       const res = await client.query(
-        'UPDATE "TR000" SET red = $1, green = $2, blue = $3 WHERE id = $4 RETURNING *',
-        [red, green, blue, 1] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต
+        'UPDATE "TR000" SET red = $1, green = $2, blue = $3, mode = $4 WHERE id = $5 RETURNING *',
+        [red, green, blue, mode, 1] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต
       );
 
       if (res.rowCount > 0) {

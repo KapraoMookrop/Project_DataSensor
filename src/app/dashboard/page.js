@@ -8,6 +8,7 @@ function Dashboard() {
     const [red, setRed] = useState(0);
     const [green, setGreen] = useState(0);
     const [blue, setBlue] = useState(0);
+    const [mode, setMode] = useState('1');
 
     const maxValue = 100;
     const minValue = 0;
@@ -68,7 +69,7 @@ function Dashboard() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ red, green, blue }),
+            body: JSON.stringify({ red, green, blue, mode }),
         })
         .then(response => response.json())
         .then(data => {
@@ -135,9 +136,9 @@ function Dashboard() {
             ))}
             {/* RGB Color Input */}
             <div className="rgb-controls mt-4 row align-items-center justify-content-center">
-                <h4 className="text-center col-1">Set RGB Color</h4>
-                <div className="form-group col-3 m-0 p-0 text-center">
-                    <label htmlFor="redRange me-2">Red: {red}</label>
+                <p className="text-center col-1">Set Neopixel Color</p>
+                <div className="form-group col-2 m-0 p-0 text-center d-block">
+                    <label htmlFor="redRange me-2">Red: {red}</label><br></br>
                     <input
                         type="range"
                         id="redRange"
@@ -148,7 +149,7 @@ function Dashboard() {
                         onChange={(e) => setRed(Number(e.target.value))}
                     />
                 </div>
-                <div className="form-group col-3 m-0 p-0 text-center">
+                <div className="form-group col-2 m-0 p-0 text-center">
                     <label htmlFor="greenRange me-2">Green: {green}</label>
                     <input
                         type="range"
@@ -160,8 +161,8 @@ function Dashboard() {
                         onChange={(e) => setGreen(Number(e.target.value))}
                     />
                 </div>
-                <div className="form-group col-3 m-0 p-0 text-center">
-                    <label htmlFor="blueRange me-2">Blue: {blue}</label>
+                <div className="form-group col-2 m-0 p-0 text-center">
+                    <label htmlFor="blueRange me-2">Blue: {blue}</label><br></br>
                     <input
                         type="range"
                         id="blueRange"
@@ -172,8 +173,21 @@ function Dashboard() {
                         onChange={(e) => setBlue(Number(e.target.value))}
                     />
                 </div>
+                <div className="form-group col-3 text-center">
+                    <label htmlFor="modeSelect" >Mode</label><br></br>
+                    <select
+                        id="modeSelect"
+                        className="form-select bg-light text-dark w-75"
+                        value={mode}
+                        onChange={(e) => setMode(e.target.value)}
+                    >
+                        <option value="1">Static Color</option>
+                        <option value="2">Breathing Effect</option>
+                        <option value="3">Chase Back and Forth</option>
+                    </select>
+                </div>
                 <div className="text-center col-2">
-                    <button className="btn btn-primary" onClick={updateColor}>Update Color</button>
+                    <button className="btn btn-primary" onClick={updateColor}>Update Neopixel</button>
                 </div>
             </div>
         </div>
