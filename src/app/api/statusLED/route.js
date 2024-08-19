@@ -1,4 +1,4 @@
-// src/app/api/receiveData/route.js
+// src/app/api/statusLED/route.js
 import { Client } from 'pg';
 import fs from 'fs';
 import path from 'path';
@@ -28,7 +28,7 @@ export async function POST(request) {
           throw new Error('No rows updated');
       }
 
-      return new Response(JSON.stringify({ success: true }), {
+      return new Response(JSON.stringify({ success: true, message: "updated" }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
       });
@@ -44,7 +44,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล
-    const res = await client.query('SELECT status_led FROM "TR000" WHERE id = $1', [1]);
+    const res = await client.query('SELECT status_led, red, green, blue FROM "TR000" WHERE id = $1', [1]);
 
     if (res.rowCount === 0) {
       throw new Error('No records found');

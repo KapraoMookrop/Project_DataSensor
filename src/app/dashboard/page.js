@@ -5,6 +5,9 @@ import React, { useEffect, useState } from 'react';
 function Dashboard() {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const [red, setRed] = useState(0);
+    const [green, setGreen] = useState(0);
+    const [blue, setBlue] = useState(0);
 
     const maxValue = 100;
     const minValue = 0;
@@ -36,19 +39,19 @@ function Dashboard() {
         }
     }
 
-    const updateLEDStatus = (status) => {
+    const updateLEDStatus = (status, mode) => {
         fetch('/api/statusLED', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ status }),
+            body: JSON.stringify({ status, mode }),
         })
         .then(response => response.json())
         .then(data => {
             console.log('Response Data:', data);  // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
             if (data.success) {
-                alert(`LED status updated to ${status}`);
+                alert(`LED status updated to ${status} ${data.message}`);
             } else {
                 alert('Failed to update LED status');
             }
@@ -59,6 +62,27 @@ function Dashboard() {
         });
     };
     
+    const updateColor = () => {
+        fetch('/api/updateColor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ red, green, blue }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`${data.message}`);
+            } else {
+                alert('Failed to update color');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating color:', error);
+            alert('Error updating color');
+        });
+    };
 
     if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
     if (data.length === 0) return <div className="alert alert-info">Loading...</div>;
@@ -109,6 +133,49 @@ function Dashboard() {
                     </div>
                 </div>
             ))}
+            {/* RGB Color Input */}
+            <div className="rgb-controls mt-4 row align-items-center justify-content-center">
+                <h4 className="text-center col-1">Set RGB Color</h4>
+                <div className="form-group col-3 m-0 p-0 text-center">
+                    <label htmlFor="redRange me-2">Red: {red}</label>
+                    <input
+                        type="range"
+                        id="redRange"
+                        className="form-range"
+                        min="0"
+                        max="255"
+                        value={red}
+                        onChange={(e) => setRed(Number(e.target.value))}
+                    />
+                </div>
+                <div className="form-group col-3 m-0 p-0 text-center">
+                    <label htmlFor="greenRange me-2">Green: {green}</label>
+                    <input
+                        type="range"
+                        id="greenRange"
+                        className="form-range"
+                        min="0"
+                        max="255"
+                        value={green}
+                        onChange={(e) => setGreen(Number(e.target.value))}
+                    />
+                </div>
+                <div className="form-group col-3 m-0 p-0 text-center">
+                    <label htmlFor="blueRange me-2">Blue: {blue}</label>
+                    <input
+                        type="range"
+                        id="blueRange"
+                        className="form-range"
+                        min="0"
+                        max="255"
+                        value={blue}
+                        onChange={(e) => setBlue(Number(e.target.value))}
+                    />
+                </div>
+                <div className="text-center col-2">
+                    <button className="btn btn-primary" onClick={updateColor}>Update Color</button>
+                </div>
+            </div>
         </div>
     );
 }
