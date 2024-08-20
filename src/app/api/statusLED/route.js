@@ -56,8 +56,8 @@ export async function GET() {
     });
   } catch (error) {
     // บันทึกข้อผิดพลาดลงใน log.txt
-    const logPath = path.join(process.cwd(), 'log.txt');
-    fs.appendFileSync(logPath, `${new Date().toISOString()} - ${error.message}\n`);
+    //const logPath = path.join(process.cwd(), 'log.txt');
+    //fs.appendFileSync(logPath, `${new Date().toISOString()} - ${error.message}\n`);
 
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
