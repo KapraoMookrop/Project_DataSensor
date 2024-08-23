@@ -14,7 +14,7 @@ function dataTable() {
           .then(response => response.json())
           .then(data => setData(data))
           .catch(error => setError(error));
-  }, []);
+  });
 
   if (error) return <div className="alert alert-danger container">Error: {error.message}</div>;
   if (data.length === 0) return <div className="alert alert-info container">Loading...</div>;

@@ -27,7 +27,7 @@ function SensorData() {
         setData(data);
       })
       .catch(error => setError(error));
-  }, []);
+  });
 
   // Prepare data for the chart
   const chartData = {
