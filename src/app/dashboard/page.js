@@ -10,7 +10,7 @@ function Dashboard() {
     const [blue, setBlue] = useState(0);
     const [mode, setMode] = useState('1');
 
-    const maxValue = 100;
+    const maxValue = 7200;
     const minValue = 0;
 
     useEffect(() => {
@@ -35,6 +35,7 @@ function Dashboard() {
     useEffect(() => {
         data.forEach((item, index) => {
             rotateWheel(item.neo_pixel_duration, `ledDuration${index}`);
+            console.log(item.neo_pixel_duration);
         });
     }, [data]);
 
@@ -94,6 +95,14 @@ function Dashboard() {
         });
     };
 
+    function formatDuration(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs}h ${mins}m ${secs}s`;
+    }
+    
+
     if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
     if (data.length === 0) return <div className="alert alert-info">Loading...</div>;
 
@@ -101,20 +110,20 @@ function Dashboard() {
         <div className="container mb-4">
             {data.map((item, index) => (
                 <div key={index} className="sensor-data-row row align-items-center">
-                    <div className="progress-wheel-wrapper col-3">
+                    <div className="progress-wheel-wrapper col-6 col-lg-3 text-center">
                         <p className='fs-4 text-center'>NeoPixel usage</p>
                         <div className="pw-body">
                             <div className="pw-circle" id={`ledDuration${index}`}></div>
                             <div className="pw-circle-overlay">
-                                <span className="pw-value-label">{item.neo_pixel_duration} s/day</span>
+                                <span className="pw-value-label">{formatDuration(item.neo_pixel_duration)}</span>
                             </div>
                         </div>
                     </div>
-                    <div className="col-3 text-center">
+                    <div className="col-6 col-lg-3 text-center">
                         <button className="btn btn-success w-100 my-2 mt-5" onClick={() => updateLEDStatus('on')}>Turn LED On</button>
                         <button className="btn btn-danger w-100 my-2" onClick={() => updateLEDStatus('off')}>Turn LED Off</button>
                     </div>
-                    <div className="col-2 text-center">
+                    <div className="col-6 col-lg-2 text-center mt-lg-0 mt-4">
                         <div className="form-group m-0 p-0 text-center">
                             <label htmlFor="redRange me-2">Red: {red}</label><br></br>
                             <input
@@ -128,7 +137,7 @@ function Dashboard() {
                             />
                         </div>
                         <div className="form-group m-0 p-0 text-center">
-                            <label htmlFor="greenRange me-2">Green: {green}</label>
+                            <label htmlFor="greenRange me-2">Green: {green}</label><br></br>
                             <input
                                 type="range"
                                 id="greenRange"
@@ -140,7 +149,7 @@ function Dashboard() {
                             />
                         </div>
                     </div>
-                    <div className="col-2 text-center">
+                    <div className="col-6 col-lg-2 text-center mt-lg-0 mt-4">
                         <div className="form-group m-0 p-0 text-center">
                             <label htmlFor="blueRange me-2">Blue: {blue}</label><br></br>
                             <input
@@ -168,7 +177,7 @@ function Dashboard() {
                             </select>
                         </div>
                     </div>
-                    <div className='col-2 text-center'>
+                    <div className='col-lg-2 text-center mt-lg-0 mt-4'>
                     <div className="text-center">
                             <button className="btn btn-primary" onClick={updateColor}>Update Neopixel</button>
                         </div>
