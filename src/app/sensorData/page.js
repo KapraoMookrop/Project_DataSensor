@@ -27,7 +27,7 @@ function SensorData() {
         setData(data);
       })
       .catch(error => setError(error));
-  });
+  }, []);
 
   // Prepare data for the chart
   const chartData = {
@@ -70,7 +70,7 @@ function SensorData() {
       y: {
         title: {
           display: true,
-          text: 'NeoPixel usage'
+          text: 'Sensor Value'
         }
       }
     },

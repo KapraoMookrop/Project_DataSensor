@@ -10,7 +10,7 @@ function Dashboard() {
     const [blue, setBlue] = useState(0);
     const [mode, setMode] = useState('1');
 
-    const maxValue = 200;
+    const maxValue = 100;
     const minValue = 0;
 
     useEffect(() => {
