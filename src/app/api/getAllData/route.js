@@ -30,7 +30,7 @@ function convertToThailandTime(timestamp) {
 
 export async function GET() {
   try {
-    const res = await client.query('SELECT * FROM "TR000"');
+    const res = await client.query('SELECT * FROM "CCW043"');
     
     // แปลง timestamp ในแต่ละ row ก่อนส่งไป
     const dataWithConvertedTime = res.rows.map(row => ({

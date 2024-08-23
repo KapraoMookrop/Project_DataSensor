@@ -2,8 +2,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, CategoryScale, LinearScale, LineElement, PointElement } from 'chart.js';
 
 ChartJS.register(
   Title,
@@ -11,97 +11,84 @@ ChartJS.register(
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  LineElement,
+  PointElement
 );
 
 function SensorData() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/api/getData')
+    fetch('/api/getAllData')
       .then(response => response.json())
-      .then(data => setData(data[0])) // Assuming you want the latest record
+      .then(data => {
+        console.log(data); // Log the received data to check its structure
+        setData(data);
+      })
       .catch(error => setError(error));
   }, []);
 
-  if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
-  if (!data || Object.keys(data).length === 0) return <div className="alert alert-info">Loading...</div>;
-
+  // Prepare data for the chart
   const chartData = {
-    labels: ['LDR', 'VR', 'Temperature', 'Distance'],
+    labels: data.map(record => {
+      const [datePart, timePart] = record.updated.split(' '); // แยกวันที่และเวลา
+      const [day, month, year] = datePart.split('/'); // แยกวัน/เดือน/ปี
+
+      // สร้างรูปแบบใหม่ที่ JavaScript เข้าใจ (MM/DD/YYYY HH:mm:ss)
+      const formattedDate = `${month}/${day}/${year} ${timePart}`;
+      const date = new Date(formattedDate);
+      
+      // ตรวจสอบว่าค่าวันที่ถูกต้องหรือไม่
+      if (isNaN(date.getTime())) {
+        console.error(`Invalid date format for record: ${record.updated}`);
+        return "Invalid Date"; // หรือข้อความแทนที่ที่ต้องการ
+      }
+
+      return `${date.toLocaleDateString()}`;
+    }),
     datasets: [
       {
-        label: 'Sensor Data',
-        data: [data.ldr, data.vr, data.temp, data.distance],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF5733'],
-        borderColor: '#fff',
-        borderWidth: 1,
-      },
-    ],
+        label: 'NeoPixel usage',
+        data: data.map(record => record.neo_pixel_duration), // Adjust the key to match your data structure
+        fill: false,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.1
+      }
+    ]
   };
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          generateLabels: (chart) => {
-            const data = chart.data;
-            
-            return data.datasets[0].data.map((dataPoint, index) => {
-              const label = data.labels[index];
-              const color = data.datasets[0].backgroundColor[index];
-              return {
-                text: `${label}: ${dataPoint}`,
-                fillStyle: color,
-                strokeStyle: color,
-                lineWidth: 2,
-                hidden: false,
-              };
-            });
-          },
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: function(tooltipItem) {
-            return tooltipItem.label + ': ' + tooltipItem.raw;
-          },
-        },
-      },
-    },
+  // Configure chart options
+  const options = {
     scales: {
       x: {
-        beginAtZero: true,
         title: {
           display: true,
-          text: 'Sensor Types',
-        },
+          text: 'Date and Time'
+        }
       },
       y: {
-        beginAtZero: true,
         title: {
           display: true,
-          text: 'Values',
-        },
-      },
+          text: 'NeoPixel usage'
+        }
+      }
     },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top'
+      }
+    }
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Latest Sensor Data</h5>
-              <Bar data={chartData} options={chartOptions} />
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
+      {error ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <Line data={chartData} options={options} />
+      )}
     </div>
   );
 }

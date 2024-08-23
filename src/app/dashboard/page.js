@@ -10,22 +10,31 @@ function Dashboard() {
     const [blue, setBlue] = useState(0);
     const [mode, setMode] = useState('1');
 
-    const maxValue = 100;
+    const maxValue = 200;
     const minValue = 0;
 
     useEffect(() => {
+        // Fetch data and initial color settings from the database
         fetch('/api/getData')
             .then(response => response.json())
-            .then(data => setData(data))
+            .then(data => {
+                setData(data);
+
+                // Assuming the color and mode settings are part of the data
+                if (data.length > 0) {
+                    const { red, green, blue, mode } = data[0]; // Adjust the index or structure as needed
+                    setRed(red || 0);
+                    setGreen(green || 0);
+                    setBlue(blue || 0);
+                    setMode(mode || '1');
+                }
+            })
             .catch(error => setError(error));
     }, []);
 
     useEffect(() => {
         data.forEach((item, index) => {
-            rotateWheel(item.ldr, `ldrWheel${index}`);
-            rotateWheel(item.vr, `vrWheel${index}`);
-            rotateWheel(item.temp, `tempWheel${index}`);
-            rotateWheel(item.distance, `distanceWheel${index}`);
+            rotateWheel(item.neo_pixel_duration, `ledDuration${index}`);
         });
     }, [data]);
 
@@ -91,105 +100,81 @@ function Dashboard() {
     return (
         <div className="container mb-4">
             {data.map((item, index) => (
-                <div key={index} className="sensor-data-row row">
+                <div key={index} className="sensor-data-row row align-items-center">
                     <div className="progress-wheel-wrapper col-3">
-                        <p className='fs-4 text-center'>LDR(Lux)</p>
+                        <p className='fs-4 text-center'>NeoPixel usage</p>
                         <div className="pw-body">
-                            <div className="pw-circle" id={`ldrWheel${index}`}></div>
+                            <div className="pw-circle" id={`ledDuration${index}`}></div>
                             <div className="pw-circle-overlay">
-                                <span className="pw-value-label">{item.ldr}K</span>
+                                <span className="pw-value-label">{item.neo_pixel_duration} s/day</span>
                             </div>
                         </div>
                     </div>
-                    <div className="progress-wheel-wrapper col-3">
-                        <p className='fs-4 text-center'>Variable Resistor(Volt)</p>
-                        <div className="pw-body">
-                            <div className="pw-circle" id={`vrWheel${index}`}></div>
-                            <div className="pw-circle-overlay">
-                                <span className="pw-value-label">{item.vr}</span>
-                            </div>
+                    <div className="col-3 text-center">
+                        <button className="btn btn-success w-100 my-2 mt-5" onClick={() => updateLEDStatus('on')}>Turn LED On</button>
+                        <button className="btn btn-danger w-100 my-2" onClick={() => updateLEDStatus('off')}>Turn LED Off</button>
+                    </div>
+                    <div className="col-2 text-center">
+                        <div className="form-group m-0 p-0 text-center">
+                            <label htmlFor="redRange me-2">Red: {red}</label><br></br>
+                            <input
+                                type="range"
+                                id="redRange"
+                                className="form-range"
+                                min="0"
+                                max="255"
+                                value={red}
+                                onChange={(e) => setRed(Number(e.target.value))}
+                            />
+                        </div>
+                        <div className="form-group m-0 p-0 text-center">
+                            <label htmlFor="greenRange me-2">Green: {green}</label>
+                            <input
+                                type="range"
+                                id="greenRange"
+                                className="form-range"
+                                min="0"
+                                max="255"
+                                value={green}
+                                onChange={(e) => setGreen(Number(e.target.value))}
+                            />
                         </div>
                     </div>
-                    <div className="progress-wheel-wrapper col-3">
-                        <p className='fs-4 text-center'>Temperature(°C)</p>
-                        <div className="pw-body">
-                            <div className="pw-circle" id={`tempWheel${index}`}></div>
-                            <div className="pw-circle-overlay">
-                                <span className="pw-value-label">{item.temp}</span>
-                            </div>
+                    <div className="col-2 text-center">
+                        <div className="form-group m-0 p-0 text-center">
+                            <label htmlFor="blueRange me-2">Blue: {blue}</label><br></br>
+                            <input
+                                type="range"
+                                id="blueRange"
+                                className="form-range"
+                                min="0"
+                                max="255"
+                                value={blue}
+                                onChange={(e) => setBlue(Number(e.target.value))}
+                            />
+                        </div>
+                        <div className="form-group  m-0 p-0 text-center">
+                            <label htmlFor="modeSelect" >Mode</label><br></br>
+                            <select
+                                id="modeSelect"
+                                className="form-select bg-light text-dark w-75 rounded-2"
+                                aria-label="Default select example"
+                                value={mode}
+                                onChange={(e) => setMode(e.target.value)}
+                            >
+                                <option value="1">Static Color</option>
+                                <option value="2">Breathing Effect</option>
+                                <option value="3">Chase Back and Forth</option>
+                            </select>
                         </div>
                     </div>
-                    <div className="progress-wheel-wrapper col-3">
-                        <p className='fs-4 text-center'>Ultra Sonic(CM.)</p>
-                        <div className="pw-body">
-                            <div className="pw-circle" id={`distanceWheel${index}`}></div>
-                            <div className="pw-circle-overlay">
-                                <span className="pw-value-label">{item.distance}</span>
-                            </div>
+                    <div className='col-2 text-center'>
+                    <div className="text-center">
+                            <button className="btn btn-primary" onClick={updateColor}>Update Neopixel</button>
                         </div>
-                    </div>
-                    <div className="col-12 text-center mt-3">
-                        <button className="btn btn-success mx-3" onClick={() => updateLEDStatus('on')}>Turn LED On</button>
-                        <button className="btn btn-danger" onClick={() => updateLEDStatus('off')}>Turn LED Off</button>
                     </div>
                 </div>
             ))}
-            {/* RGB Color Input */}
-            <div className="rgb-controls mt-4 row align-items-center justify-content-center">
-                <p className="text-center col-1">Set Neopixel Color</p>
-                <div className="form-group col-2 m-0 p-0 text-center d-block">
-                    <label htmlFor="redRange me-2">Red: {red}</label><br></br>
-                    <input
-                        type="range"
-                        id="redRange"
-                        className="form-range"
-                        min="0"
-                        max="255"
-                        value={red}
-                        onChange={(e) => setRed(Number(e.target.value))}
-                    />
-                </div>
-                <div className="form-group col-2 m-0 p-0 text-center">
-                    <label htmlFor="greenRange me-2">Green: {green}</label>
-                    <input
-                        type="range"
-                        id="greenRange"
-                        className="form-range"
-                        min="0"
-                        max="255"
-                        value={green}
-                        onChange={(e) => setGreen(Number(e.target.value))}
-                    />
-                </div>
-                <div className="form-group col-2 m-0 p-0 text-center">
-                    <label htmlFor="blueRange me-2">Blue: {blue}</label><br></br>
-                    <input
-                        type="range"
-                        id="blueRange"
-                        className="form-range"
-                        min="0"
-                        max="255"
-                        value={blue}
-                        onChange={(e) => setBlue(Number(e.target.value))}
-                    />
-                </div>
-                <div className="form-group col-3 text-center">
-                    <label htmlFor="modeSelect" >Mode</label><br></br>
-                    <select
-                        id="modeSelect"
-                        className="form-select bg-light text-dark w-75"
-                        value={mode}
-                        onChange={(e) => setMode(e.target.value)}
-                    >
-                        <option value="1">Static Color</option>
-                        <option value="2">Breathing Effect</option>
-                        <option value="3">Chase Back and Forth</option>
-                    </select>
-                </div>
-                <div className="text-center col-2">
-                    <button className="btn btn-primary" onClick={updateColor}>Update Neopixel</button>
-                </div>
-            </div>
         </div>
     );
 }

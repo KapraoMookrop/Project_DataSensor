@@ -26,21 +26,21 @@ function dataTable() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>LDR</th>
-              <th>VR</th>
-              <th>Temperature</th>
-              <th>Distance</th>
-              <th>Timestamp</th>
+              <th>Red</th>
+              <th>Green</th>
+              <th>Blue</th>
+              <th>Neopixel Duration (second)</th>
+              <th>last updated</th>
             </tr>
           </thead>
           <tbody>
             {data.map(row => (
               <tr key={row.id}>
                 <td>{row.id}</td>
-                <td>{row.ldr}</td>
-                <td>{row.vr}</td>
-                <td>{row.temp}</td>
-                <td>{row.distance}</td>
+                <td>{row.red}</td>
+                <td>{row.green}</td>
+                <td>{row.blue}</td>
+                <td>{row.neo_pixel_duration}</td>
                 <td>{row.updated}</td>
               </tr>
             ))}

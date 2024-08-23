@@ -12,7 +12,7 @@ client.connect();
 
 export async function GET() {
   try {
-    const res = await client.query('SELECT * FROM public."TR000" ORDER BY "updated" DESC LIMIT 1');
+    const res = await client.query('SELECT * FROM public."CCW043" ORDER BY "id" DESC LIMIT 1');
     return new Response(JSON.stringify(res.rows), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

@@ -20,8 +20,8 @@ export async function POST(request) {
       }
 
       const res = await client.query(
-          'UPDATE "TR000" SET status_led = $1 WHERE id = $2 RETURNING *',
-          [status, 1] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต หากมีหลายแถวให้ปรับเป็น ID ที่ต้องการ
+          'UPDATE "CCW043" SET status_led = $1',
+          [status] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต หากมีหลายแถวให้ปรับเป็น ID ที่ต้องการ
       );
 
       if (res.rowCount === 0) {
@@ -44,7 +44,7 @@ export async function POST(request) {
 export async function GET() {
   try {
     // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล
-    const res = await client.query('SELECT status_led, red, green, blue, mode FROM "TR000" WHERE id = $1', [1]);
+    const res = await client.query('SELECT status_led, red, green, blue, mode FROM "CCW043" WHERE id = $1', [1]);
 
     if (res.rowCount === 0) {
       throw new Error('No records found');
