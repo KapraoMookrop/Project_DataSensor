@@ -1,4 +1,3 @@
-// src/app/api/updateColor/route.js
 import { Client } from 'pg';
 import dotenv from 'dotenv';
 
@@ -14,7 +13,11 @@ export async function POST(request) {
   try {
     // รับข้อมูลจาก request body
     const body = await request.json();
-    const { red, green, blue, mode } = body;
+    let { red, green, blue, mode } = body;
+    red = parseInt(red);
+    green = parseInt(green);
+    blue = parseInt(blue);
+    mode = parseInt(mode);
 
     // ตรวจสอบข้อมูลที่ได้รับ
     if (
@@ -22,10 +25,13 @@ export async function POST(request) {
       typeof green === 'number' && green >= 0 && green <= 255 &&
       typeof blue === 'number' && blue >= 0 && blue <= 255
     ) {
-      // อัพเดทข้อมูลในฐานข้อมูล
+      // ดึงวันที่ปัจจุบันในรูปแบบที่ตรงกับฐานข้อมูล (เช่น YYYY-MM-DD)
+      const currentDate = new Date().toISOString().split('T')[0];
+
+      // อัพเดทข้อมูลในฐานข้อมูลที่มีวันที่ตรงกับวันที่ปัจจุบัน
       const res = await client.query(
-        'UPDATE "CCW043" SET red = $1, green = $2, blue = $3, mode = $4',
-        [red, green, blue, mode] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต
+        'UPDATE "CCW043" SET red = $1, green = $2, blue = $3, mode = $4 WHERE updated::date = $5::date',
+        [red, green, blue, mode, currentDate]
       );
 
       if (res.rowCount > 0) {
@@ -34,7 +40,7 @@ export async function POST(request) {
           headers: { 'Content-Type': 'application/json' },
         });
       } else {
-        return new Response(JSON.stringify({ success: false, message: 'Failed to update color' }), {
+        return new Response(JSON.stringify({ success: false, message: 'No record found for the current date' + currentDate}), {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
         });

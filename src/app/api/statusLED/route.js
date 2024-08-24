@@ -40,14 +40,19 @@ export async function POST(request) {
   }
 }
 
-// ฟังก์ชันจัดการคำขอ GET
 export async function GET() {
   try {
-    // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล
-    const res = await client.query('SELECT status_led, red, green, blue, mode FROM "CCW043" WHERE id = $1', [1]);
+    // ดึงวันที่ปัจจุบันในรูปแบบ YYYY-MM-DD
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล โดยใช้วันที่ปัจจุบันในการคิวรี
+    const res = await client.query(
+      'SELECT status_led, red, green, blue, mode FROM "CCW043" WHERE updated::date = $1::date',
+      [currentDate]
+    );
 
     if (res.rowCount === 0) {
-      throw new Error('No records found');
+      throw new Error('No records found for the current date');
     }
 
     return new Response(JSON.stringify(res.rows[0]), {
@@ -55,9 +60,7 @@ export async function GET() {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    // บันทึกข้อผิดพลาดลงใน log.txt
-    //const logPath = path.join(process.cwd(), 'log.txt');
-    //fs.appendFileSync(logPath, `${new Date().toISOString()} - ${error.message}\n`);
+    console.error('Error fetching status:', error);
 
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
@@ -65,3 +68,4 @@ export async function GET() {
     });
   }
 }
+
