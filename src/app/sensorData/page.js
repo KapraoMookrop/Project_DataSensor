@@ -64,7 +64,7 @@ function SensorData() {
       x: {
         title: {
           display: true,
-          text: 'Date and Time'
+          text: 'Date'
         }
       },
       y: {

@@ -110,9 +110,9 @@ function Dashboard() {
         <div className="container mb-4">
             {data.map((item, index) => (
                 <div key={index} className="sensor-data-row row align-items-center">
-                    <div className="progress-wheel-wrapper col-6 col-lg-3 text-center">
-                        <p className='fs-4 text-center'>NeoPixel usage</p>
-                        <div className="pw-body">
+                    <div className="progress-wheel-wrapper col-md-6 col-lg-3 text-center">
+                        <p className='fs-4 text-center'>NeoPixel usage / day</p>
+                        <div className="pw-body ms-sm-5">
                             <div className="pw-circle" id={`ledDuration${index}`}></div>
                             <div className="pw-circle-overlay">
                                 <span className="pw-value-label">{formatDuration(item.neo_pixel_duration)}</span>

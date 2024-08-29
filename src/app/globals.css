@@ -122,6 +122,12 @@ a {
   position: relative;
 }
 
+@media(max-width: 865px){
+  .pw-body {
+    margin-left: 48px;
+  }
+}
+
 .pw-circle {
   position: absolute;
   width: 100%;
