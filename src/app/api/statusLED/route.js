@@ -42,19 +42,31 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    // ดึงวันที่ปัจจุบันในรูปแบบ YYYY-MM-DD
+    // Get the current date in YYYY-MM-DD format
     const currentDate = new Date().toISOString().split('T')[0];
 
-    // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล โดยใช้วันที่ปัจจุบันในการคิวรี
+    // Fetch the status for the current date from the database
     const res = await client.query(
       'SELECT status_led, red, green, blue, mode FROM "CCW043" WHERE updated::date = $1::date',
       [currentDate]
     );
 
+    // If no record is found for the current date, fetch the latest record
     if (res.rowCount === 0) {
-      throw new Error('No records found for the current date');
+      const resLastRecord = await client.query(
+        'SELECT status_led, red, green, blue, mode FROM "CCW043" ORDER BY updated DESC LIMIT 1'
+      );
+      if (resLastRecord.rowCount === 0) {
+        throw new Error('No records found');
+      }
+
+      return new Response(JSON.stringify(resLastRecord.rows[0]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
+    // Return the status found for the current date
     return new Response(JSON.stringify(res.rows[0]), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -68,4 +80,5 @@ export async function GET() {
     });
   }
 }
+
 
