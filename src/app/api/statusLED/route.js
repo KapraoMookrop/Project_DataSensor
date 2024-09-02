@@ -21,7 +21,7 @@ export async function POST(request) {
 
       const res = await client.query(
           'UPDATE "CCW043" SET status_led = $1',
-          [status] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต หากมีหลายแถวให้ปรับเป็น ID ที่ต้องการ
+          [status]
       );
 
       if (res.rowCount === 0) {
