@@ -12,10 +12,15 @@ client.connect();
 
 export async function GET() {
   try {
-    const res = await client.query('SELECT * FROM public."CCW043" ORDER BY "updated" DESC LIMIT 1');
+    const res = await client.query('SELECT * FROM "CCW043" ORDER BY "updated" DESC LIMIT 1');
     return new Response(JSON.stringify(res.rows), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
     });
   } catch (error) {
 
